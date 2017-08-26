@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
-from flask_script import Manager
+from flask_script import Manager, Shell
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -16,6 +16,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'da
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
+
+def make_shell_context():
+    return dict(app=app, db=db, User=User, Role=Role)
+manager.add_command("shell", Shell(make_context=make_shell_context))
 
 
 class NameForm(FlaskForm):
